@@ -8,6 +8,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from app.models.timetable import TeachingAssignment
+from app.schemas.timetable import TeachingAssignmentImport
 from app.models.user import User
 from app.models.class_model import ClassGroup
 from app.models.subject import Subject
