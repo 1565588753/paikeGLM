@@ -9,12 +9,14 @@ FastAPI 应用入口文件
 """
 import asyncio
 import json
+import os
 from contextlib import asynccontextmanager
 from typing import Set
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from app.config import settings
@@ -134,6 +136,52 @@ app.add_middleware(
 )
 
 
+# ==================== SPA 路由回退中间件 ====================
+
+# 前端构建目录路径
+_BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+FRONTEND_DIST = os.path.join(_BASE_DIR, "frontend", "dist")
+FRONTEND_INDEX = os.path.join(FRONTEND_DIST, "index.html")
+
+# 挂载静态资源（如果dist目录存在）
+if os.path.isdir(FRONTEND_DIST):
+    assets_dir = os.path.join(FRONTEND_DIST, "assets")
+    if os.path.isdir(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+    for item in os.listdir(FRONTEND_DIST):
+        item_path = os.path.join(FRONTEND_DIST, item)
+        if os.path.isdir(item_path) and item != "assets":
+            app.mount(f"/{item}", StaticFiles(directory=item_path), name=item)
+
+
+@app.middleware("http")
+async def spa_router_middleware(request: Request, call_next):
+    """SPA 单页应用路由回退中间件"""
+    path = request.url.path
+
+    # API/文档/WebSocket/静态资源路径直接放行
+    if (path.startswith("/api/") or path == "/api" or
+            path.startswith("/docs") or path.startswith("/redoc") or
+            path == "/openapi.json" or path.startswith("/openapi") or
+            path.startswith("/ws/") or path.startswith("/assets/")):
+        return await call_next(request)
+
+    # 根路径交给后面的路由处理
+    if path == "/":
+        return await call_next(request)
+
+    # 其他 GET 请求：尝试作为静态文件或返回 index.html
+    if request.method == "GET":
+        if not os.path.exists(FRONTEND_INDEX):
+            return await call_next(request)
+        possible_file = os.path.join(FRONTEND_DIST, path.lstrip("/"))
+        if os.path.isfile(possible_file):
+            return FileResponse(possible_file)
+        return FileResponse(FRONTEND_INDEX)
+
+    return await call_next(request)
+
+
 # ==================== 注册路由 ====================
 
 from app.api import (  # noqa: E402
@@ -207,17 +255,18 @@ async def file_not_found_handler(request: Request, exc: FileNotFoundError):
     )
 
 
-@app.get("/", tags=["健康检查"])
-async def root():
-    """根路径健康检查"""
-    return {
-        "name": settings.APP_NAME,
-        "version": settings.APP_VERSION,
-        "status": "running",
-    }
-
-
-@app.get("/health", tags=["健康检查"])
+@app.get("/api/health", tags=["健康检查"])
 async def health_check():
     """健康检查端点"""
     return {"status": "ok"}
+
+
+@app.get("/", response_class=FileResponse, include_in_schema=False)
+async def serve_root():
+    """根路径：返回前端 index.html 或欢迎页"""
+    if os.path.exists(FRONTEND_INDEX):
+        return FRONTEND_INDEX
+    return FileResponse(
+        path=os.path.join(os.path.dirname(__file__), "templates", "welcome.html"),
+        media_type="text/html",
+    )

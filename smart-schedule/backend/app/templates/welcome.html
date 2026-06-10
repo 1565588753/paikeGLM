@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能排课系统 - 欢迎</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 60px 80px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        .api-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .api-link:hover {
+            text-decoration: underline;
+        }
+        .status {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="status">后端服务运行正常</div>
+        <h1>智能排课系统</h1>
+        <p class="subtitle">
+            前端页面尚未构建<br><br>
+            请在宝塔服务器上执行以下命令构建前端：<br><br>
+            <code>cd /www/wwwroot/smart-schedule/frontend</code><br>
+            <code>npm install</code><br>
+            <code>npm run build</code><br><br>
+            构建完成后刷新此页面即可访问系统。<br><br>
+            您也可以查看 <a class="api-link" href="/docs">API 文档</a>
+        </p>
+    </div>
+</body>
+</html>

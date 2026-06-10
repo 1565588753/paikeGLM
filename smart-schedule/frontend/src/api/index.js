@@ -27,6 +27,10 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   response => {
     const res = response.data
+    // FastAPI 直接返回对象（没有code字段），直接使用
+    if (!res.code) {
+      return { code: 200, data: res, message: '' }
+    }
     if (res.code && res.code !== 200) {
       ElMessage.error(res.message || '请求失败')
       if (res.code === 401) {
