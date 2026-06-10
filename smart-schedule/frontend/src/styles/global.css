@@ -1,0 +1,286 @@
+:root {
+  --primary-color: #409EFF;
+  --success-color: #67C23A;
+  --warning-color: #E6A23C;
+  --danger-color: #F56C6C;
+  --info-color: #909399;
+  --sidebar-width: 220px;
+  --sidebar-collapsed-width: 64px;
+  --header-height: 60px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.page-container {
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.search-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.card-stat {
+  text-align: center;
+  padding: 20px;
+}
+
+.card-stat .stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.card-stat .stat-label {
+  font-size: 14px;
+  color: #909399;
+  margin-top: 8px;
+}
+
+/* Timetable grid styles */
+.timetable-grid {
+  display: grid;
+  gap: 2px;
+  background: #ebeef5;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.timetable-header {
+  background: #f5f7fa;
+  padding: 10px 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #303133;
+}
+
+.timetable-period {
+  background: #f5f7fa;
+  padding: 8px 6px;
+  text-align: center;
+  font-size: 12px;
+  color: #606266;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 60px;
+}
+
+.timetable-cell {
+  background: #fff;
+  padding: 6px;
+  min-height: 60px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.timetable-cell:hover {
+  background: #ecf5ff;
+}
+
+.timetable-cell .subject-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.timetable-cell .teacher-name {
+  font-size: 11px;
+  color: #909399;
+  margin-top: 2px;
+}
+
+.timetable-cell .classroom-name {
+  font-size: 11px;
+  color: #c0c4cc;
+  margin-top: 1px;
+}
+
+.timetable-cell .week-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+  padding: 0 4px;
+  border-radius: 2px;
+  line-height: 16px;
+}
+
+.week-badge-odd {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.week-badge-even {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+
+.subject-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Drag schedule styles */
+.drag-source {
+  cursor: grab;
+  border: 2px dashed #dcdfe6;
+  border-radius: 4px;
+  padding: 8px;
+  margin: 4px 0;
+  background: #fafafa;
+  transition: all 0.2s;
+}
+
+.drag-source:hover {
+  border-color: var(--primary-color);
+  background: #ecf5ff;
+}
+
+.drag-source:active {
+  cursor: grabbing;
+}
+
+.drop-valid {
+  background: #f0f9eb !important;
+  border: 2px solid var(--success-color) !important;
+}
+
+.drop-invalid {
+  background: #fef0f0 !important;
+  border: 2px solid var(--danger-color) !important;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .el-aside,
+  .el-header {
+    display: none !important;
+  }
+
+  .el-main {
+    padding: 0 !important;
+  }
+
+  .timetable-grid {
+    border: 1px solid #000;
+  }
+
+  .timetable-cell,
+  .timetable-header,
+  .timetable-period {
+    border: 1px solid #999;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 12px;
+  }
+
+  .page-title {
+    font-size: 18px;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .timetable-cell {
+    min-height: 50px;
+    padding: 4px;
+  }
+
+  .timetable-cell .subject-name {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 8px;
+  }
+
+  .timetable-cell .teacher-name,
+  .timetable-cell .classroom-name {
+    display: none;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0c4cc;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f7fa;
+}
+
+/* Animation */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}

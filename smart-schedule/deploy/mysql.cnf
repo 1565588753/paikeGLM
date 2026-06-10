@@ -1,0 +1,37 @@
+[mysqld]
+# 字符集设置
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+
+# 连接设置
+max_connections=500
+wait_timeout=28800
+interactive_timeout=28800
+
+# 缓冲池设置（根据服务器内存调整）
+innodb-buffer-pool-size=256M
+innodb-log-buffer-size=16M
+innodb-log-file-size=64M
+
+# 查询缓存（MySQL 5.7支持）
+query-cache-type=1
+query-cache-size=64M
+query-cache-limit=2M
+
+# 临时表设置
+tmp-table-size=64M
+max-heap-table-size=64M
+
+# 慢查询日志
+slow-query-log=1
+slow-query-log-file=/var/lib/mysql/slow.log
+long-query-time=2
+
+# 时区设置
+default-time-zone='+08:00'
+
+[client]
+default-character-set=utf8mb4
+
+[mysql]
+default-character-set=utf8mb4
