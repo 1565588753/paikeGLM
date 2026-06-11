@@ -20,17 +20,34 @@ export const useUserStore = defineStore('user', () => {
 
   async function login(loginForm) {
     const res = await loginApi(loginForm)
-    const data = res.data
-    token.value = data.token
-    setToken(data.token)
-    userInfo.value = data.user
-    return data
+    // 后端返回格式: { access_token, token_type, user: { real_name, ... } }
+    // res.data 是经过 API 拦截器包装后的 { code, data: {...} }
+    const rawData = res.data ? res.data : res
+    const token = rawData.token || rawData.access_token
+    const user = rawData.user || {}
+    token.value = token
+    setToken(token)
+    userInfo.value = {
+      id: user.id,
+      username: user.username,
+      name: user.name || user.real_name || user.username,
+      role: user.role,
+      avatar: user.avatar || ''
+    }
+    return rawData
   }
 
   async function fetchUserInfo() {
     const res = await getUserInfo()
-    userInfo.value = res.data
-    return res.data
+    const rawData = res.data ? res.data : res
+    userInfo.value = {
+      id: rawData.id,
+      username: rawData.username,
+      name: rawData.name || rawData.real_name || rawData.username,
+      role: rawData.role,
+      avatar: rawData.avatar || ''
+    }
+    return rawData
   }
 
   function logout() {
